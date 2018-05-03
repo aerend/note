@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 editor = os.environ.get('EDITOR', 'vim')
-folder = os.path.expanduser(os.environ.get('NOTEDIR', '~/Dropbox/Apps/Editorial/'))
+folder = os.path.expanduser(os.environ.get('NOTEDIR', '~/notes/'))
 extension = os.environ.get('NOTEEXT', '.md')
 
 
