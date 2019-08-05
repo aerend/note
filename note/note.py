@@ -1,6 +1,7 @@
 import argparse
 import configparser
 import os
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -11,6 +12,7 @@ config = configparser.ConfigParser()
 config.read(map(os.path.expanduser, CONFIG_FILE_LOCATIONS))
 
 editor = config.get('DEFAULT', 'editor', fallback='vim')
+editor = shlex.split(editor)
 folder = config.get('DEFAULT', 'folder', fallback='~/notes/')
 filetype = config.get('DEFAULT', 'filetype', fallback='.md')
 
@@ -29,7 +31,7 @@ def user_edit(text):
     with tempfile.NamedTemporaryFile(suffix='.tmp') as tf:
         tf.write(text)
         tf.flush()
-        subprocess.call([editor, tf.name])
+        subprocess.call([*editor, tf.name])
         # needs to be read separately via the file name and not the file
         # handle due to an issue with vim on macOS
         # https://stackoverflow.com/questions/46018144/editing-temporary-file-with-vim-in-python-subprocess-not-working-as-expected-on
@@ -57,9 +59,9 @@ def list_():
 def edit(file=None):
     # TODO: make file an optional parameter
     if file:
-        subprocess.call([editor, file_path(file)])
+        subprocess.call([*editor, file_path(file)])
     else:
-        subprocess.call([editor, folder])
+        subprocess.call([*editor, folder])
 
 
 def append(file, entries):
